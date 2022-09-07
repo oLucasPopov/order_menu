@@ -35,10 +35,16 @@ describe('Create Product Controller', () => {
     const httpResponse = await sut.handle(makeFakeRequest('quantity'));
     expect(httpResponse.statusCode).toBe(400);
   })
-  
+
   it('should return 400 if no description is provided', async () => {
     const sut = new CreateProductController();
     const httpResponse = await sut.handle(makeFakeRequest('description'));
+    expect(httpResponse.statusCode).toBe(400);
+  })
+
+  it('should return 400 if no category is provided', async () => {
+    const sut = new CreateProductController();
+    const httpResponse = await sut.handle(makeFakeRequest('category'));
     expect(httpResponse.statusCode).toBe(400);
   })
 })
