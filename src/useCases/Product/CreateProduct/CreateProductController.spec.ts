@@ -8,6 +8,8 @@ const makeFakeRequest = (omit: string): IHttpRequest => {
     price: 'any_price',
     description: 'any_description',
     quantity: 'any_quantity',
+    category: 'any_category',
+    unit: 'any_unit',
   }
 
   if (omit) {
@@ -46,5 +48,17 @@ describe('Create Product Controller', () => {
     const sut = new CreateProductController();
     const httpResponse = await sut.handle(makeFakeRequest('category'));
     expect(httpResponse.statusCode).toBe(400);
+  })
+
+  it('should return 400 if no unit is provided', async () => {
+    const sut = new CreateProductController();
+    const httpResponse = await sut.handle(makeFakeRequest('unit'));
+    expect(httpResponse.statusCode).toBe(400);
+  })
+
+  it('should return 200 if all required fields are provided', async () => {
+    const sut = new CreateProductController();
+    const httpResponse = await sut.handle(makeFakeRequest(''));
+    expect(httpResponse.statusCode).toBe(200);
   })
 })
