@@ -5,9 +5,10 @@ const makeFakeRequest = (omit: string): IHttpRequest => {
 
   const body = {
     name: 'any_name',
-    price: 'any_price',
+    cost: 10,
+    price: 20,
+    quantity: 30,
     description: 'any_description',
-    quantity: 'any_quantity',
     category: 'any_category',
     unit: 'any_unit',
   }
