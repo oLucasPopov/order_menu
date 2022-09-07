@@ -8,9 +8,21 @@ const makeFakeRequest = (omit: string): IHttpRequest => {
     cost: 10,
     price: 20,
     quantity: 30,
+    barcode: 'any_barcode',
     description: 'any_description',
     category: 'any_category',
     unit: 'any_unit',
+    expirationDate: 'any_expirationDate',
+    providerCode: 'any_providerCode',
+    ean: 'any_ean',
+    ncm: 'any_ncm',
+    cest: 'any_cest',
+    origin: 'any_origin',
+    liquidWeight: 40,
+    bruteWeight: 50,
+    width: 50,
+    height: 60,
+    length: 70,
   }
 
   if (omit) {
