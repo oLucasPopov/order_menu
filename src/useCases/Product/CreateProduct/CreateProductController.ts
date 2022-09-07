@@ -5,11 +5,13 @@ import { IHttpRequest, IHttpResponse } from "../../Presentation/Protocols/http";
 
 export class CreateProductController implements IController {
   async handle(request: IHttpRequest): Promise<IHttpResponse> {
-    const requiredFields = ['name',
+    const requiredFields = [
+      'name',
       'price',
       'quantity',
       'description',
       'category',
+      'unit',
     ];
 
     for (const field of requiredFields) {
