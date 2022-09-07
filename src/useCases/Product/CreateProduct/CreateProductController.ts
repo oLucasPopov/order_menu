@@ -10,6 +10,9 @@ export class CreateProductController implements IController {
       return badRequest(new MissingParamError('name'));
     }
 
+    if (!request.body.price) {
+      return badRequest(new MissingParamError('price'));
+    }
 
     return Promise.resolve(ok({}));
   }
