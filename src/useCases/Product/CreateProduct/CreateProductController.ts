@@ -1,3 +1,4 @@
+import { ok } from "../../Presentation/helpers/http/httpHelper";
 import { IController } from "../../Presentation/Protocols/controller";
 import { IHttpRequest, IHttpResponse } from "../../Presentation/Protocols/http";
 
@@ -12,6 +13,6 @@ export class CreateProductController implements IController {
     }
 
 
-    return Promise.resolve({statusCode: 200, body: {}});
+    return Promise.resolve(ok({}));
   }
 }
