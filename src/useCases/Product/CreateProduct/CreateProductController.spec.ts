@@ -26,4 +26,17 @@ describe('Create Product Controller', () => {
 
     expect(httpResponse.statusCode).toBe(400);
   })
+
+  it('should return 400 if no quantity is provided', async () => {
+    const sut = new CreateProductController();
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        price: 10,
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest);
+
+    expect(httpResponse.statusCode).toBe(400);
+  })
 })
