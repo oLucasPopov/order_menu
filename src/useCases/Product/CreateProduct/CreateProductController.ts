@@ -47,7 +47,6 @@ export class CreateProductController implements IController {
         height,
         length,
       } = request.body;
-
       const product = await this.createProductUseCase.execute(
         {
           name,
@@ -72,8 +71,7 @@ export class CreateProductController implements IController {
         }
       );
 
-
-      return Promise.resolve(ok({}));
+      return Promise.resolve(ok(product));
     } catch (err: any) {
       return Promise.resolve(serverError(err.message));
     }
