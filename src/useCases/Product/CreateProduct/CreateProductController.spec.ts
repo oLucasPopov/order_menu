@@ -1,4 +1,5 @@
 import { ICreateProductRepository } from "../../../repositories/ProductRepository";
+import { ok } from "../../Presentation/helpers/http/httpHelper";
 import { IHttpRequest } from "../../Presentation/Protocols/http";
 import { CreateProductController } from "./CreateProductController";
 import { CreateProductUseCase } from "./CreateProductUseCase";
@@ -33,6 +34,29 @@ const makeFakeRequest = (omit: string): IHttpRequest => {
 
   return { body }
 };
+
+const makeFakeProduct = () => ({
+  id: 1,
+  name: 'any_name',
+  cost: 10,
+  price: 20,
+  quantity: 30,
+  barcode: 'any_barcode',
+  description: 'any_description',
+  category: 'any_category',
+  unit: 'any_unit',
+  expirationDate: 'any_expirationDate',
+  providerCode: 'any_providerCode',
+  ean: 'any_ean',
+  ncm: 'any_ncm',
+  cest: 'any_cest',
+  origin: 'any_origin',
+  liquidWeight: 40,
+  bruteWeight: 50,
+  width: 50,
+  height: 60,
+  length: 70,
+});
 
 const makeSut = () => {
   class CreateProductRepositoryStub implements ICreateProductRepository {
@@ -124,5 +148,12 @@ describe('Create Product Controller', () => {
     });
     const httpResponse = await sut.handle(makeFakeRequest(''));
     expect(httpResponse.statusCode).toBe(500);
+  })
+
+  it('should return product if valid data is provided', async () => {
+    const { sut, createProductUseCaseStub } = makeSut();
+    jest.spyOn(createProductUseCaseStub, 'execute').mockReturnValueOnce(Promise.resolve(makeFakeProduct()));
+    const httpResponse = await sut.handle(makeFakeRequest(''));
+    expect(httpResponse).toEqual(ok(makeFakeProduct()));
   })
 })
