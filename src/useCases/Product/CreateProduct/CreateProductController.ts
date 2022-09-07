@@ -5,18 +5,14 @@ import { IHttpRequest, IHttpResponse } from "../../Presentation/Protocols/http";
 
 export class CreateProductController implements IController {
   async handle(request: IHttpRequest): Promise<IHttpResponse> {
+    const requiredFields = ['name', 'price', 'quantity'];
 
-    if (!request.body.name) {
-      return badRequest(new MissingParamError('name'));
+    for (const field of requiredFields) {
+      if (!request.body[field]) {
+        return badRequest(new MissingParamError(field));
+      }
     }
 
-    if (!request.body.price) {
-      return badRequest(new MissingParamError('price'));
-    }
-
-    if (!request.body.quantity) {
-      return badRequest(new MissingParamError('quantity'));
-    }
 
     return Promise.resolve(ok({}));
   }
