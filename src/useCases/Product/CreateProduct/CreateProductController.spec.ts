@@ -116,4 +116,13 @@ describe('Create Product Controller', () => {
       length: 70,
     });
   })
+
+  it('should return 500 if CreateProductUseCase throws', async () => {
+    const { sut, createProductUseCaseStub } = makeSut();
+    jest.spyOn(createProductUseCaseStub, 'execute').mockImplementationOnce(() => {
+      throw new Error();
+    });
+    const httpResponse = await sut.handle(makeFakeRequest(''));
+    expect(httpResponse.statusCode).toBe(500);
+  })
 })
