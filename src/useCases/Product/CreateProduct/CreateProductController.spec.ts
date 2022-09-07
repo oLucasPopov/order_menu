@@ -1,5 +1,7 @@
+import { ICreateProductRepository } from "../../../repositories/ProductRepository";
 import { IHttpRequest } from "../../Presentation/Protocols/http";
 import { CreateProductController } from "./CreateProductController";
+import { CreateProductUseCase } from "./CreateProductUseCase";
 
 const makeFakeRequest = (omit: string): IHttpRequest => {
 
@@ -33,8 +35,16 @@ const makeFakeRequest = (omit: string): IHttpRequest => {
 };
 
 const makeSut = () => {
-  const sut = new CreateProductController();
-  return { sut };
+  class CreateProductRepositoryStub implements ICreateProductRepository {
+    async create(product: any): Promise<any> {
+      return Promise.resolve(product);
+    }
+  }
+
+  const createProductRepositoryStub = new CreateProductRepositoryStub();
+  const createProductUseCaseStub = new CreateProductUseCase(createProductRepositoryStub);
+  const sut = new CreateProductController(createProductUseCaseStub);
+  return { sut, createProductUseCaseStub };
 }
 
 describe('Create Product Controller', () => {
@@ -78,5 +88,32 @@ describe('Create Product Controller', () => {
     const { sut } = makeSut();
     const httpResponse = await sut.handle(makeFakeRequest(''));
     expect(httpResponse.statusCode).toBe(200);
+  })
+
+  it('should call CreateProductUseCase with correct values', async () => {
+    const { sut, createProductUseCaseStub } = makeSut();
+    const createSpy = jest.spyOn(createProductUseCaseStub, 'execute');
+    await sut.handle(makeFakeRequest(''));
+    expect(createSpy).toHaveBeenCalledWith({
+      name: 'any_name',
+      cost: 10,
+      price: 20,
+      quantity: 30,
+      barcode: 'any_barcode',
+      description: 'any_description',
+      category: 'any_category',
+      unit: 'any_unit',
+      expirationDate: 'any_expirationDate',
+      providerCode: 'any_providerCode',
+      ean: 'any_ean',
+      ncm: 'any_ncm',
+      cest: 'any_cest',
+      origin: 'any_origin',
+      liquidWeight: 40,
+      bruteWeight: 50,
+      width: 50,
+      height: 60,
+      length: 70,
+    });
   })
 })
