@@ -8,7 +8,7 @@ export class Product {
   description: string;
   category: string;
   unit: string;
-  expirationDate: string;
+  expirationDate: Date;
   providerCode: string;
   ean: string;
   ncm: string;
@@ -30,7 +30,7 @@ export class AddProduct {
   description: string;
   category: string;
   unit: string;
-  expirationDate: string;
+  expirationDate: Date;
   providerCode: string;
   ean: string;
   ncm: string;

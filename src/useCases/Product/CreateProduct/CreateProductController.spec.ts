@@ -45,7 +45,7 @@ const makeFakeProduct = () => ({
   description: 'any_description',
   category: 'any_category',
   unit: 'any_unit',
-  expirationDate: 'any_expirationDate',
+  expirationDate: new Date('2021-01-01'),
   providerCode: 'any_providerCode',
   ean: 'any_ean',
   ncm: 'any_ncm',
