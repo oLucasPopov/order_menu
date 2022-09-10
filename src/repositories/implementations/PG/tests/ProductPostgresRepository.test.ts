@@ -22,10 +22,10 @@ const fakeProduct = (): AddProduct => {
     quantity: 1,
     barcode: "any_barcode",
     description: "any_description",
-    category: "any_category",
-    unit: "any_unit",
+    category: 1,
+    unit: 1,
     expirationDate: new Date(2023, 1, 1, 1, 1, 1, 1),
-    providerCode: "any_providerCode",
+    providerCode: 1,
     ean: "any_ean",
     ncm: "any_ncm",
     cest: "any_cest",
@@ -46,7 +46,7 @@ describe('Product Postgres Repository', () => {
   });
 
   it('should be able to create a new product', async () => {
-    const sut = new ProductPostgresRepository();
+    const { sut } = makeSut();
     const product = await sut.create(fakeProduct());
     expect(product).toHaveProperty('id');
   });

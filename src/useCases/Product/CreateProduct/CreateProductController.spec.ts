@@ -4,29 +4,31 @@ import { IHttpRequest } from "../../Presentation/Protocols/http";
 import { CreateProductController } from "./CreateProductController";
 import { CreateProductUseCase } from "./CreateProductUseCase";
 
+const fakeProductData = () => ({
+  name: 'any_name',
+  cost: 10,
+  price: 20,
+  quantity: 30,
+  barcode: 'any_barcode',
+  description: 'any_description',
+  category: 1,
+  unit: 1,
+  expirationDate: new Date(2023, 1, 1, 1, 1, 1, 1),
+  providerCode: 1,
+  ean: 'any_ean',
+  ncm: 'any_ncm',
+  cest: 'any_cest',
+  origin: 'any_origin',
+  liquidWeight: 40,
+  bruteWeight: 50,
+  width: 50,
+  height: 60,
+  length: 70,
+})
+
 const makeFakeRequest = (omit: string): IHttpRequest => {
 
-  const body = {
-    name: 'any_name',
-    cost: 10,
-    price: 20,
-    quantity: 30,
-    barcode: 'any_barcode',
-    description: 'any_description',
-    category: 'any_category',
-    unit: 'any_unit',
-    expirationDate: 'any_expirationDate',
-    providerCode: 'any_providerCode',
-    ean: 'any_ean',
-    ncm: 'any_ncm',
-    cest: 'any_cest',
-    origin: 'any_origin',
-    liquidWeight: 40,
-    bruteWeight: 50,
-    width: 50,
-    height: 60,
-    length: 70,
-  }
+  const body = fakeProductData()
 
   if (omit) {
     delete body[omit as keyof typeof body];
@@ -37,25 +39,7 @@ const makeFakeRequest = (omit: string): IHttpRequest => {
 
 const makeFakeProduct = () => ({
   id: 1,
-  name: 'any_name',
-  cost: 10,
-  price: 20,
-  quantity: 30,
-  barcode: 'any_barcode',
-  description: 'any_description',
-  category: 'any_category',
-  unit: 'any_unit',
-  expirationDate: new Date('2021-01-01'),
-  providerCode: 'any_providerCode',
-  ean: 'any_ean',
-  ncm: 'any_ncm',
-  cest: 'any_cest',
-  origin: 'any_origin',
-  liquidWeight: 40,
-  bruteWeight: 50,
-  width: 50,
-  height: 60,
-  length: 70,
+  ...fakeProductData()
 });
 
 const makeSut = () => {
@@ -118,27 +102,7 @@ describe('Create Product Controller', () => {
     const { sut, createProductUseCaseStub } = makeSut();
     const createSpy = jest.spyOn(createProductUseCaseStub, 'execute');
     await sut.handle(makeFakeRequest(''));
-    expect(createSpy).toHaveBeenCalledWith({
-      name: 'any_name',
-      cost: 10,
-      price: 20,
-      quantity: 30,
-      barcode: 'any_barcode',
-      description: 'any_description',
-      category: 'any_category',
-      unit: 'any_unit',
-      expirationDate: 'any_expirationDate',
-      providerCode: 'any_providerCode',
-      ean: 'any_ean',
-      ncm: 'any_ncm',
-      cest: 'any_cest',
-      origin: 'any_origin',
-      liquidWeight: 40,
-      bruteWeight: 50,
-      width: 50,
-      height: 60,
-      length: 70,
-    });
+    expect(createSpy).toHaveBeenCalledWith(fakeProductData());
   })
 
   it('should return 500 if CreateProductUseCase throws', async () => {

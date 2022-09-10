@@ -6,10 +6,10 @@ export class Product {
   quantity: number;
   barcode: string;
   description: string;
-  category: string;
-  unit: string;
+  category: number;
+  unit: number;
   expirationDate: Date;
-  providerCode: string;
+  providerCode: number;
   ean: string;
   ncm: string;
   cest: string;
@@ -28,10 +28,10 @@ export class AddProduct {
   quantity: number;
   barcode: string;
   description: string;
-  category: string;
-  unit: string;
+  category: number;
+  unit: number;
   expirationDate: Date;
-  providerCode: string;
+  providerCode: number;
   ean: string;
   ncm: string;
   cest: string;
