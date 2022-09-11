@@ -14,3 +14,8 @@ export const serverError = (error: Error): IHttpResponse => ({
   statusCode: 500,
   body: error
 })
+
+export const notFound = (error: Error): IHttpResponse => ({
+  statusCode: 404,
+  body: error
+})
