@@ -84,4 +84,15 @@ describe('Get Product Controller', () => {
     expect(httpResponse.statusCode).toBe(200);
     expect(httpResponse.body).toEqual(makeFakeProduct());
   });
+
+  it('Should return 404 if GetProductUseCase returns null', async () => {
+    const { sut, getProductUseCase } = makeSut();
+    const httpRequest = fakeRequest();
+
+    jest.spyOn(getProductUseCase, 'execute').mockReturnValueOnce(Promise.resolve(null as any));
+
+    const httpResponse = await sut.handle(httpRequest);
+
+    expect(httpResponse.statusCode).toBe(404);
+  });
 });
