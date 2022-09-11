@@ -1,4 +1,5 @@
 import { Product } from "../../../entities/Product";
+import { NotFoundError } from "../../Presentation/errors/NotFoundError";
 import { IGetProductUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
 import { GetProductController } from "./GetProductController";
 
@@ -94,5 +95,16 @@ describe('Get Product Controller', () => {
     const httpResponse = await sut.handle(httpRequest);
 
     expect(httpResponse.statusCode).toBe(404);
+  });
+
+  it('Should return NotFoundError if GetProductUseCase returns null', async () => {
+    const { sut, getProductUseCase } = makeSut();
+    const httpRequest = fakeRequest();
+
+    jest.spyOn(getProductUseCase, 'execute').mockReturnValueOnce(Promise.resolve(null as any));
+
+    const httpResponse = await sut.handle(httpRequest);
+
+    expect(httpResponse.body).toEqual(new NotFoundError('Product not found'));
   });
 });
