@@ -5,7 +5,8 @@ import { IController } from "../useCases/Presentation/Protocols/controller";
 export const adaptRoute = (controller: IController): RequestHandler => {
   return async (req: Request, res: Response) => {
     const httpRequest: IHttpRequest = {
-      body: req.body
+      body: req.body,
+      params: req.params
     }
     const httpResponse: IHttpResponse = await controller.handle(httpRequest)
     if (httpResponse.statusCode === 200) {
