@@ -1,24 +1,28 @@
-import { Client } from "pg";
+import { Client, QueryResult } from "pg";
 import config from "../../../../config/env"
 
 const pghelper = {
-  pgClient: new Client({
-    user: config.PgUser,
-    host: config.PgHost,
-    database: config.PgDatabase,
-    password: config.PgPassword,
-    port: config.PgPort,
-  }),
+  pgClient: undefined as Client | undefined,
 
-  connect() {
-    this.pgClient.connect();
+  async connect() {
+    this.pgClient = new Client({
+      user: config.PgUser,
+      host: config.PgHost,
+      database: config.PgDatabase,
+      password: config.PgPassword,
+      port: config.PgPort,
+    });
+
+    await this.pgClient.connect();
   },
 
   async disconnect() {
-    await this.pgClient.end();
+    if (this.pgClient)
+      await this.pgClient.end();
   },
-  query(query: string, params: any[]) {
-    return this.pgClient.query(query, params);
+
+  async query(query: string, params: any[]) {
+    return await this.pgClient!.query(query, params);
   }
 }
 

@@ -6,7 +6,7 @@ import pghelper from "../helpers/pg_helper";
 export class ProductPostgresRepository implements ICreateProductRepository {
   async create(data: AddProduct): Promise<Product> {
 
-    pghelper.connect();
+    await pghelper.connect();
 
     const res = await pghelper.query(
       `
