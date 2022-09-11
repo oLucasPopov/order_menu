@@ -1,5 +1,5 @@
 import { MissingParamError } from "../../Presentation/errors/MissingParamError";
-import { badRequest } from "../../Presentation/helpers/http/httpHelper";
+import { badRequest, ok } from "../../Presentation/helpers/http/httpHelper";
 import { IController } from "../../Presentation/Protocols/controller";
 import { IHttpRequest, IHttpResponse } from "../../Presentation/Protocols/http";
 import { IGetProductUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
@@ -19,9 +19,6 @@ export class GetProductController implements IController {
 
     const product = await this.getProductUseCase.execute(id);
 
-    return Promise.resolve({
-      statusCode: 200,
-      body: null
-    })
+    return ok(product);
   }
 }
