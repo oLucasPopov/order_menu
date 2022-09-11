@@ -74,4 +74,14 @@ describe('Get Product Controller', () => {
 
     expect(executeSpy).toHaveBeenCalledWith(1);
   });
+
+  it('Should return a product on success', async () => {
+    const { sut } = makeSut();
+    const httpRequest = fakeRequest();
+
+    const httpResponse = await sut.handle(httpRequest);
+
+    expect(httpResponse.statusCode).toBe(200);
+    expect(httpResponse.body).toEqual(makeFakeProduct());
+  });
 });
