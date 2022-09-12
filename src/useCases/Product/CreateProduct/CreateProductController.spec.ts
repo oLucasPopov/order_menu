@@ -1,3 +1,4 @@
+import { AddProduct, Product } from "../../../entities/Product";
 import { ICreateProductRepository } from "../../../repositories/ProductRepository";
 import { ok } from "../../Presentation/helpers/http/httpHelper";
 import { IHttpRequest } from "../../Presentation/Protocols/http";
@@ -53,6 +54,12 @@ const makeSut = () => {
   const createProductUseCaseStub = new CreateProductUseCase(createProductRepositoryStub);
   const sut = new CreateProductController(createProductUseCaseStub);
   return { sut, createProductUseCaseStub };
+}
+
+class CreateProductRepositoryStub implements ICreateProductRepository {
+  async create(product: AddProduct): Promise<Product> {
+    return Promise.resolve(Object.assign({}, product, { id: 1 }));
+  }
 }
 
 describe('Create Product Controller', () => {
@@ -119,5 +126,39 @@ describe('Create Product Controller', () => {
     jest.spyOn(createProductUseCaseStub, 'execute').mockReturnValueOnce(Promise.resolve(makeFakeProduct()));
     const httpResponse = await sut.handle(makeFakeRequest(''));
     expect(httpResponse).toEqual(ok(makeFakeProduct()));
+  })
+})
+
+describe('Create Product Use Case', () => {
+  it('should call CreateProductRepository with correct values', async () => {
+    const createProductRepositoryStub = new CreateProductRepositoryStub();
+    const createProductUseCase = new CreateProductUseCase(createProductRepositoryStub);
+    const createSpy = jest.spyOn(createProductRepositoryStub, 'create');
+    await createProductUseCase.execute(fakeProductData());
+    expect(createSpy).toHaveBeenCalledWith(fakeProductData());
+  })
+
+  it('should throw if CreateProductRepository throws', async () => {
+    const createProductRepositoryStub = new CreateProductRepositoryStub();
+    const createProductUseCase = new CreateProductUseCase(createProductRepositoryStub);
+    jest.spyOn(createProductRepositoryStub, 'create').mockImplementationOnce(() => {
+      throw new Error();
+    });
+    const promise = createProductUseCase.execute(fakeProductData());
+    await expect(promise).rejects.toThrow();
+  })
+
+  it('Should have property ID after creating product', async () => {
+    const createProductRepositoryStub = new CreateProductRepositoryStub();
+    const createProductUseCase = new CreateProductUseCase(createProductRepositoryStub);
+    const product = await createProductUseCase.execute(fakeProductData());
+    expect(product).toHaveProperty('id');
+  })
+
+  it('Should have property name after creating product', async () => {
+    const createProductRepositoryStub = new CreateProductRepositoryStub();
+    const createProductUseCase = new CreateProductUseCase(createProductRepositoryStub);
+    const product = await createProductUseCase.execute(fakeProductData());
+    expect(product).toHaveProperty('name');
   })
 })
