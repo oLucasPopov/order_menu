@@ -1,7 +1,7 @@
 import { MissingParamError } from "../../Presentation/errors/MissingParamError";
 import { badRequest, ok, serverError } from "../../Presentation/helpers/http/httpHelper";
-import { IController } from "../../Presentation/Protocols/controller";
-import { IHttpRequest, IHttpResponse } from "../../Presentation/Protocols/http";
+import { IController } from "../../Presentation/Protocols/controller/controller";
+import { IHttpRequest, IHttpResponse } from "../../Presentation/Protocols/http/http";
 import { CreateProductUseCase } from "./CreateProductUseCase";
 
 export class CreateProductController implements IController {
