@@ -1,4 +1,5 @@
 import { Product } from "../../../entities/Product";
+import { IGetProductRepository } from "../../../repositories/ProductRepository";
 import { NotFoundError } from "../../Presentation/errors/NotFoundError";
 import { IGetProductUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
 import { GetProductController } from "./GetProductController";
@@ -37,18 +38,30 @@ const makeFakeProduct = () => ({
 });
 
 const makeSut = () => {
+  class GetProductRepositoryStub implements IGetProductRepository {
+    async get(id: number): Promise<Product> {
+      return new Promise(resolve => resolve(makeFakeProduct()));
+    }
+  }
+
   class GetProductUseCaseStub implements IGetProductUseCase {
-    async execute(id: string): Promise<Product> {
+    constructor(
+      private productRepository: IGetProductRepository
+    ) {}
+
+    async execute(id: number): Promise<Product> {
       const product: Product = new Product();
       Object.assign(product, { id }, fakeProductData());
       return Promise.resolve(product);
     }
   }
 
-  const getProductUseCase = new GetProductUseCaseStub();
-  const sut = new GetProductController(getProductUseCase);
+  const getProductRepositoryStub = new GetProductRepositoryStub();
+  const getProductUseCaseStub = new GetProductUseCaseStub(getProductRepositoryStub);
+  const sut = new GetProductController(getProductUseCaseStub);
   return {
-    getProductUseCase,
+    getProductRepositoryStub,
+    getProductUseCaseStub,
     sut
   };
 }
@@ -66,10 +79,10 @@ describe('Get Product Controller', () => {
   });
 
   it('Should call GetProductUseCase with correct id', async () => {
-    const { sut, getProductUseCase } = makeSut();
+    const { sut, getProductUseCaseStub } = makeSut();
     const httpRequest = fakeRequest();
 
-    const executeSpy = jest.spyOn(getProductUseCase, 'execute');
+    const executeSpy = jest.spyOn(getProductUseCaseStub, 'execute');
 
     await sut.handle(httpRequest);
 
@@ -87,10 +100,10 @@ describe('Get Product Controller', () => {
   });
 
   it('Should return 404 if GetProductUseCase returns null', async () => {
-    const { sut, getProductUseCase } = makeSut();
+    const { sut, getProductUseCaseStub } = makeSut();
     const httpRequest = fakeRequest();
 
-    jest.spyOn(getProductUseCase, 'execute').mockReturnValueOnce(Promise.resolve(null as any));
+    jest.spyOn(getProductUseCaseStub, 'execute').mockReturnValueOnce(Promise.resolve(null as any));
 
     const httpResponse = await sut.handle(httpRequest);
 
@@ -98,13 +111,13 @@ describe('Get Product Controller', () => {
   });
 
   it('Should return NotFoundError if GetProductUseCase returns null', async () => {
-    const { sut, getProductUseCase } = makeSut();
+    const { sut, getProductUseCaseStub } = makeSut();
     const httpRequest = fakeRequest();
 
-    jest.spyOn(getProductUseCase, 'execute').mockReturnValueOnce(Promise.resolve(null as any));
+    jest.spyOn(getProductUseCaseStub, 'execute').mockReturnValueOnce(Promise.resolve(null as any));
 
     const httpResponse = await sut.handle(httpRequest);
 
-    expect(httpResponse.body).toEqual(new NotFoundError('Product not found'));
+    expect(httpResponse.body).toEqual(new NotFoundError('Product'));
   });
 });

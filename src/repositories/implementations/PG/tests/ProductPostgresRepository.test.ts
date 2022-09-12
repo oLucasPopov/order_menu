@@ -8,6 +8,12 @@ function makeSut() {
       Object.assign(newProduct, { id: 1 }, data);
       return newProduct;
     }
+
+    async get(id: number): Promise<Product> {
+      const product = new Product();
+      Object.assign(product, { id: id });
+      return product;
+    }
   }
 
   const sut = new ProductPostgresRepositoryStub();
@@ -49,5 +55,11 @@ describe('Product Postgres Repository', () => {
     const { sut } = makeSut();
     const product = await sut.create(fakeProduct());
     expect(product).toHaveProperty('id');
+  });
+
+  it('returned ID should have the same value as the one passed in', async () => {
+    const { sut } = makeSut();
+    const product = await sut.get(1);
+    expect(product.id).toBe(1);
   });
 })
