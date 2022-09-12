@@ -19,9 +19,9 @@ export class GetProductController implements IController {
     const { id } = request.params;
 
     const product = await this.getProductUseCase.execute(id);
-
+    
     if (!product) {
-      return notFound(new NotFoundError('Product not found'));
+      return notFound(new NotFoundError('Product'));
     }
 
     return ok(product);

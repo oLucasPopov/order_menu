@@ -1,9 +1,9 @@
 import { AddProduct, Product } from "../../../../entities/Product";
-import { ICreateProductRepository } from "../../../ProductRepository";
+import { ICreateProductRepository, IGetProductRepository } from "../../../ProductRepository";
 import pghelper from "../helpers/pg_helper";
 
 
-export class ProductPostgresRepository implements ICreateProductRepository {
+export class ProductPostgresRepository implements ICreateProductRepository, IGetProductRepository {
   async create(data: AddProduct): Promise<Product> {
 
     await pghelper.connect();
@@ -59,5 +59,25 @@ export class ProductPostgresRepository implements ICreateProductRepository {
 
     await pghelper.disconnect();
     return newProduct;
+  }
+
+  async get(id: number): Promise<Product> {
+    await pghelper.connect();
+
+    const res = await pghelper.query(
+      `
+      SELECT * FROM PRODUCTS WHERE ID = $1;
+      `, [id]);
+
+
+    if (res.rowCount === 0) {
+      return null as unknown as Product;
+    } else {
+      const product = new Product();
+      Object.assign(product, res.rows[0]);
+
+      await pghelper.disconnect();
+      return product || null;
+    }
   }
 }

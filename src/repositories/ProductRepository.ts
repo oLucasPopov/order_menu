@@ -5,5 +5,5 @@ export interface ICreateProductRepository {
 }
 
 export interface IGetProductRepository {
-  get(id: string): Promise<Product>;
+  get(id: number): Promise<Product>;
 }

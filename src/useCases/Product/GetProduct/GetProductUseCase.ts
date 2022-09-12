@@ -8,8 +8,8 @@ export class GetProductUseCase implements IGetProductUseCase {
     private productRepository: IGetProductRepository
   ) {}
 
-  async execute(id: string): Promise<Product> {
+  async execute(id: number): Promise<Product> {
     const product = await this.productRepository.get(id);
-    return product
+    return product 
   }
 }
