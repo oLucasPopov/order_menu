@@ -82,4 +82,16 @@ describe('ListProductsController', () => {
     expect(httpResponse.statusCode).toBe(400);
   });
   
+  it('Should return 400 if x-items-per-page is invalid', async () => {
+    const { sut } = makeSut();
+ 
+    const httpResponse = await sut.handle({
+      headers: {
+        "Content-Type": "application/json",
+        "x-current-page": 1,
+        "x-items-per-page": "invalid",
+      }
+    });
+    expect(httpResponse.statusCode).toBe(400);
+  });
 });
