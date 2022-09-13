@@ -68,5 +68,18 @@ describe('ListProductsController', () => {
     });
     expect(httpResponse.body).toEqual(new MissingHeaderError('x-items-per-page'));
   });
-
+  
+  it('Should return 400 if x-current-page is invalid', async () => {
+    const { sut } = makeSut();
+ 
+    const httpResponse = await sut.handle({
+      headers: {
+        "Content-Type": "application/json",
+        "x-current-page": "invalid",
+        "x-items-per-page": 20,
+      }
+    });
+    expect(httpResponse.statusCode).toBe(400);
+  });
+  
 });
