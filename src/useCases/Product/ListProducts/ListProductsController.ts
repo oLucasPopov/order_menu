@@ -6,13 +6,12 @@ import { IController, IHttpRequest, IHttpResponse } from "../../Presentation/Pro
 export class ListProductsController implements IController {
 
   async handle(request: IHttpRequest): Promise<IHttpResponse> {
+    const requiredHeaders = ['x-current-page', 'x-items-per-page'];
 
-    if(!request.headers["x-current-page"]) {
-      return badRequest(new MissingHeaderError("x-current-page"));
-    }
-
-    if(!request.headers["x-items-per-page"]) {
-      return badRequest(new MissingHeaderError("x-items-per-page"));
+    for(let header of requiredHeaders) {
+      if(!request.headers[header]) {
+        return badRequest(new MissingHeaderError(header));
+      }
     }
 
     return ok([]);
