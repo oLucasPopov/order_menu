@@ -1,3 +1,4 @@
+import { MissingHeaderError } from "../../Presentation/errors/MissingHeaderError";
 import { ListProductsController } from "./ListProductsController";
 
 const makeSut = () => {
@@ -32,4 +33,16 @@ describe('ListProductsController', () => {
     expect(httpResponse.statusCode).toBe(400);
   });
   
+  it('Should return missingHeaderError if no page is provided', async () => {
+    const { sut } = makeSut();
+ 
+    const httpResponse = await sut.handle({
+      headers: {
+        "Content-Type": "application/json",
+        "x-items-per-page": 20,
+      }
+    });
+    expect(httpResponse.body).toEqual(new MissingHeaderError('x-current-page'));
+  });
+
 });
