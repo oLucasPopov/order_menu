@@ -15,7 +15,6 @@ export class ListProductsController implements IController {
     }
 
     for(let header of requiredHeaders) {
-      console.log(header, ' :', typeof request.headers[header]);
       if(typeof request.headers[header] !== 'number') {
         return badRequest(new InvalidParamError(header));
       }
