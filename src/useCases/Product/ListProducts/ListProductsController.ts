@@ -1,5 +1,4 @@
-import { InvalidParamError } from "../../Presentation/errors/InvalidParamError";
-import { MissingHeaderError } from "../../Presentation/errors/MissingHeaderError";
+import { InvalidParamError, MissingHeaderError} from "../../Presentation/errors";
 import { badRequest, ok } from "../../Presentation/helpers/http/httpHelper";
 import { IController, IHttpRequest, IHttpResponse } from "../../Presentation/Protocols";
 

@@ -1,8 +1,6 @@
-import { MissingParamError } from "../../Presentation/errors/MissingParamError";
-import { NotFoundError } from "../../Presentation/errors/NotFoundError";
+import { MissingParamError, NotFoundError} from "../../Presentation/errors";
 import { badRequest, notFound, ok, serverError } from "../../Presentation/helpers/http/httpHelper";
-import { IController } from "../../Presentation/Protocols/controller/controller";
-import { IHttpRequest, IHttpResponse } from "../../Presentation/Protocols/http/http";
+import { IController, IHttpRequest, IHttpResponse } from "../../Presentation/Protocols";
 import { IGetProductUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
 
 
