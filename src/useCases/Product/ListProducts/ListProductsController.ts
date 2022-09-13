@@ -11,6 +11,10 @@ export class ListProductsController implements IController {
       return badRequest(new MissingHeaderError("x-current-page"));
     }
 
+    if(!request.headers["x-items-per-page"]) {
+      return badRequest(new MissingHeaderError("x-items-per-page"));
+    }
+
     return ok([]);
   }
 }
