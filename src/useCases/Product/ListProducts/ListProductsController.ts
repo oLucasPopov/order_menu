@@ -1,3 +1,4 @@
+import { InvalidParamError } from "../../Presentation/errors/InvalidParamError";
 import { MissingHeaderError } from "../../Presentation/errors/MissingHeaderError";
 import { badRequest, ok } from "../../Presentation/helpers/http/httpHelper";
 import { IController, IHttpRequest, IHttpResponse } from "../../Presentation/Protocols";
@@ -11,6 +12,13 @@ export class ListProductsController implements IController {
     for(let header of requiredHeaders) {
       if(!request.headers[header]) {
         return badRequest(new MissingHeaderError(header));
+      }
+    }
+
+    for(let header of requiredHeaders) {
+      console.log(header, ' :', typeof request.headers[header]);
+      if(typeof request.headers[header] !== 'number') {
+        return badRequest(new InvalidParamError(header));
       }
     }
 
