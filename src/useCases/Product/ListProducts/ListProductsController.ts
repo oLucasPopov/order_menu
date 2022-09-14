@@ -37,7 +37,6 @@ export class ListProductsController implements IController {
         itemsPerPage
       });
 
-      console.log('prod len: ', products.length)
 
       if (products.length === 0) {
         return noContent();
