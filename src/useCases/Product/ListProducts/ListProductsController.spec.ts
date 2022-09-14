@@ -1,9 +1,20 @@
+import { Product } from "../../../entities/Product";
 import { MissingHeaderError } from "../../Presentation/errors/MissingHeaderError";
+import { IListProductUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
 import { ListProductsController } from "./ListProductsController";
 
 const makeSut = () => {
-  const sut = new ListProductsController();
-  return { sut };
+  class ListProductUseCaseStub implements IListProductUseCase {
+    async execute(): Promise<Product[]> {
+      return new Promise((resolve) => resolve([]));
+    }
+  }
+  const listProductUseCaseStub = new ListProductUseCaseStub();
+  const sut = new ListProductsController(listProductUseCaseStub);
+  return {
+    sut,
+    listProductUseCaseStub
+  };
 };
 
 const makeFakeRequest = () => ({
@@ -23,7 +34,7 @@ describe('ListProductsController', () => {
 
   it('should return 400 if no page is provided', async () => {
     const { sut } = makeSut();
- 
+
     const httpResponse = await sut.handle({
       headers: {
         "Content-Type": "application/json",
@@ -32,10 +43,10 @@ describe('ListProductsController', () => {
     });
     expect(httpResponse.statusCode).toBe(400);
   });
-  
+
   it('Should return missingHeaderError if no page is provided', async () => {
     const { sut } = makeSut();
- 
+
     const httpResponse = await sut.handle({
       headers: {
         "Content-Type": "application/json",
@@ -47,7 +58,7 @@ describe('ListProductsController', () => {
 
   it('should return 400 if no items per page is provided', async () => {
     const { sut } = makeSut();
- 
+
     const httpResponse = await sut.handle({
       headers: {
         "Content-Type": "application/json",
@@ -59,7 +70,7 @@ describe('ListProductsController', () => {
 
   it('Should return missingHeaderError if no items per page is provided', async () => {
     const { sut } = makeSut();
- 
+
     const httpResponse = await sut.handle({
       headers: {
         "Content-Type": "application/json",
@@ -68,10 +79,10 @@ describe('ListProductsController', () => {
     });
     expect(httpResponse.body).toEqual(new MissingHeaderError('x-items-per-page'));
   });
-  
+
   it('Should return 400 if x-current-page is invalid', async () => {
     const { sut } = makeSut();
- 
+
     const httpResponse = await sut.handle({
       headers: {
         "Content-Type": "application/json",
@@ -81,10 +92,10 @@ describe('ListProductsController', () => {
     });
     expect(httpResponse.statusCode).toBe(400);
   });
-  
+
   it('Should return 400 if x-items-per-page is invalid', async () => {
     const { sut } = makeSut();
- 
+
     const httpResponse = await sut.handle({
       headers: {
         "Content-Type": "application/json",
@@ -93,5 +104,16 @@ describe('ListProductsController', () => {
       }
     });
     expect(httpResponse.statusCode).toBe(400);
+  });
+
+  it('Should return 500 if ListProductsController throws', async () => {
+    const { sut, listProductUseCaseStub } = makeSut();
+
+    jest.spyOn(listProductUseCaseStub, 'execute').mockImplementationOnce(() => {
+      throw new Error();
+    });
+
+    const httpResponse = await sut.handle(makeFakeRequest());
+    expect(httpResponse.statusCode).toBe(500);
   });
 });
