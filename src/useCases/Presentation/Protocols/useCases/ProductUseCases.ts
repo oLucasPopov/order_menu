@@ -8,6 +8,6 @@ export interface ICreateProductUseCase {
   execute(product: AddProduct): Promise<Product>
 }
 
-export interface IListProductUseCase {
+export interface IListProductsUseCase {
   execute(): Promise<Product[]>
 }

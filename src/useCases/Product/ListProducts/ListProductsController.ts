@@ -1,14 +1,14 @@
 import { InvalidParamError, MissingHeaderError } from "../../Presentation/errors";
 import { badRequest, ok } from "../../Presentation/helpers/http/httpHelper";
 import { IController, IHttpRequest, IHttpResponse } from "../../Presentation/Protocols";
-import { IListProductUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
+import { IListProductsUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
 import { serverError } from "../../Presentation/helpers/http/httpHelper";
 
 
 export class ListProductsController implements IController {
 
   constructor(
-    private listProductUseCase: IListProductUseCase
+    private listProductsUseCase: IListProductsUseCase
   ) { }
 
   async handle(request: IHttpRequest): Promise<IHttpResponse> {
@@ -27,7 +27,7 @@ export class ListProductsController implements IController {
         }
       }
 
-      const products = this.listProductUseCase.execute();
+      const products = this.listProductsUseCase.execute();
 
       return ok(products);
     } catch (error: any) {

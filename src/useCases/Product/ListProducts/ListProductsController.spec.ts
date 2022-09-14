@@ -1,20 +1,20 @@
 import { Product } from "../../../entities/Product";
 import { MissingHeaderError } from "../../Presentation/errors/MissingHeaderError";
 import { serverError } from "../../Presentation/helpers/http/httpHelper";
-import { IListProductUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
+import { IListProductsUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
 import { ListProductsController } from "./ListProductsController";
 
 const makeSut = () => {
-  class ListProductUseCaseStub implements IListProductUseCase {
+  class ListProductsUseCaseStub implements IListProductsUseCase {
     async execute(): Promise<Product[]> {
       return new Promise((resolve) => resolve([]));
     }
   }
-  const listProductUseCaseStub = new ListProductUseCaseStub();
-  const sut = new ListProductsController(listProductUseCaseStub);
+  const listProductsUseCaseStub = new ListProductsUseCaseStub();
+  const sut = new ListProductsController(listProductsUseCaseStub);
   return {
     sut,
-    listProductUseCaseStub
+    listProductsUseCaseStub
   };
 };
 
@@ -108,9 +108,9 @@ describe('ListProductsController', () => {
   });
 
   it('Should return 500 if ListProductsUseCase throws', async () => {
-    const { sut, listProductUseCaseStub } = makeSut();
+    const { sut, listProductsUseCaseStub } = makeSut();
 
-    jest.spyOn(listProductUseCaseStub, 'execute').mockImplementationOnce(() => {
+    jest.spyOn(listProductsUseCaseStub, 'execute').mockImplementationOnce(() => {
       throw new Error();
     });
 
@@ -119,9 +119,9 @@ describe('ListProductsController', () => {
   });
 
   it('Should return serverError if ListProductsUseCase throws', async () => {
-    const { sut, listProductUseCaseStub } = makeSut();
+    const { sut, listProductsUseCaseStub } = makeSut();
 
-    jest.spyOn(listProductUseCaseStub, 'execute').mockImplementationOnce(() => {
+    jest.spyOn(listProductsUseCaseStub, 'execute').mockImplementationOnce(() => {
       throw new Error('any_error');
     });
 
