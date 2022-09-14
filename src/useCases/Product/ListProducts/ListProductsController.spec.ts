@@ -1,16 +1,50 @@
 import { Product } from "../../../entities/Product";
+import { IListProductsRepository } from "../../../repositories/ProductRepository";
 import { MissingHeaderError } from "../../Presentation/errors/MissingHeaderError";
 import { serverError } from "../../Presentation/helpers/http/httpHelper";
 import { IListProductsUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
 import { ListProductsController } from "./ListProductsController";
 
+const fakeProduct = (): Product => ({
+  id: 1,
+  name: 'valid_name',
+  description: 'valid_description',
+  price: 10,
+  quantity: 10,
+  category: 2,
+  cost: 5,
+  barcode: 'valid_barcode',
+  unit: 1,
+  expirationDate: new Date(),
+  providerCode: 1,
+  ean: 'valid_ean',
+  ncm: 'valid_ncm',
+  cest: 'valid_cest',
+  origin: 'valid_origin',
+  height: 1,
+  width: 1,
+  length: 1,
+  liquidWeight: 1,
+  bruteWeight: 1,
+})
+
 const makeSut = () => {
+  class ListProductsRepositoryStub implements IListProductsRepository {
+    list(): Promise<Product[]> {
+      return new Promise((resolve) => resolve([fakeProduct()]));
+    }
+  }
+
   class ListProductsUseCaseStub implements IListProductsUseCase {
+    constructor(
+      private readonly productRepository: IListProductsRepository,
+    ) { }
     async execute(): Promise<Product[]> {
       return new Promise((resolve) => resolve([]));
     }
   }
-  const listProductsUseCaseStub = new ListProductsUseCaseStub();
+  const listProductsRepositoryStub = new ListProductsRepositoryStub();
+  const listProductsUseCaseStub = new ListProductsUseCaseStub(listProductsRepositoryStub);
   const sut = new ListProductsController(listProductsUseCaseStub);
   return {
     sut,
@@ -146,9 +180,13 @@ describe('ListProductsController', () => {
   });
 
   it('Should return an array of products if ListProductsUseCase succeeds', async () => {
-    const { sut } = makeSut();
+    const { sut, listProductsUseCaseStub } = makeSut();
+
+    jest.spyOn(listProductsUseCaseStub, 'execute').mockImplementationOnce(() => {
+      return new Promise((resolve) => resolve([fakeProduct()]));
+    });
 
     const httpResponse = await sut.handle(makeFakeRequest());
-    expect(httpResponse.body).toEqual([]);
+    expect(httpResponse.body).toEqual([fakeProduct()]);
   });
 });
