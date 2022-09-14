@@ -1,5 +1,5 @@
 import { InvalidParamError, MissingHeaderError } from "../../Presentation/errors";
-import { badRequest, ok } from "../../Presentation/helpers/http/httpHelper";
+import { badRequest, noContent, ok } from "../../Presentation/helpers/http/httpHelper";
 import { IController, IHttpRequest, IHttpResponse } from "../../Presentation/Protocols";
 import { IListProductsUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
 import { serverError } from "../../Presentation/helpers/http/httpHelper";
@@ -37,7 +37,13 @@ export class ListProductsController implements IController {
         itemsPerPage
       });
 
-      return ok(products);
+      console.log('prod len: ', products.length)
+
+      if (products.length === 0) {
+        return noContent();
+      } else {
+        return ok(products);
+      }
     } catch (error: any) {
       return serverError(error);
     }
