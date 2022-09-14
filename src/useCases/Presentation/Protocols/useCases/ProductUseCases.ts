@@ -7,3 +7,7 @@ export interface IGetProductUseCase {
 export interface ICreateProductUseCase {
   execute(product: AddProduct): Promise<Product>
 }
+
+export interface IListProductUseCase {
+  execute(): Promise<Product[]>
+}
