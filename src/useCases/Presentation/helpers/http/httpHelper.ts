@@ -5,6 +5,11 @@ export const ok = (data: any): IHttpResponse => ({
   body: data
 })
 
+export const noContent = (): IHttpResponse => ({
+  statusCode: 204,
+  body: null
+})
+
 export const badRequest = (error: Error): IHttpResponse => ({
   statusCode: 400,
   body: error
