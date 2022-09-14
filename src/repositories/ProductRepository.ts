@@ -7,3 +7,7 @@ export interface ICreateProductRepository {
 export interface IGetProductRepository {
   get(id: number): Promise<Product>;
 }
+
+export interface IListProductsRepository {
+  list(currentPage: number, itemsPerPage: number): Promise<Product[]>;
+}
