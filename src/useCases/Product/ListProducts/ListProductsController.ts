@@ -27,7 +27,15 @@ export class ListProductsController implements IController {
         }
       }
 
-      const products = this.listProductsUseCase.execute();
+      const {
+        'x-current-page': currentPage,
+        'x-items-per-page': itemsPerPage
+      } = request.headers;
+
+      const products = this.listProductsUseCase.execute({
+        currentPage,
+        itemsPerPage
+      });
 
       return ok(products);
     } catch (error: any) {
