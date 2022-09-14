@@ -23,7 +23,7 @@ export class ListProductsController implements IController {
 
       for (let header of requiredHeaders) {
         if (typeof request.headers[header] !== 'number') {
-          return badRequest(new InvalidParamError(header));
+          return badRequest(new InvalidParamError(`${header} must be a number`));
         }
       }
 

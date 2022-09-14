@@ -107,7 +107,7 @@ describe('ListProductsController', () => {
         "x-items-per-page": 20,
       }
     });
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('x-current-page')));
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('x-current-page must be a number')));
   });
 
   it('Should return badRequest if x-items-per-page is invalid', async () => {
@@ -120,7 +120,7 @@ describe('ListProductsController', () => {
         "x-items-per-page": "invalid",
       }
     });
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('x-items-per-page')));
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('x-items-per-page must be a number')));
   });
 
   it('Should return serverError if ListProductsUseCase throws', async () => {
