@@ -1,5 +1,6 @@
 import { Product } from "../../../entities/Product";
 import { MissingHeaderError } from "../../Presentation/errors/MissingHeaderError";
+import { serverError } from "../../Presentation/helpers/http/httpHelper";
 import { IListProductUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
 import { ListProductsController } from "./ListProductsController";
 
@@ -106,7 +107,7 @@ describe('ListProductsController', () => {
     expect(httpResponse.statusCode).toBe(400);
   });
 
-  it('Should return 500 if ListProductsController throws', async () => {
+  it('Should return 500 if ListProductsUseCase throws', async () => {
     const { sut, listProductUseCaseStub } = makeSut();
 
     jest.spyOn(listProductUseCaseStub, 'execute').mockImplementationOnce(() => {
@@ -115,5 +116,16 @@ describe('ListProductsController', () => {
 
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse.statusCode).toBe(500);
+  });
+
+  it('Should return serverError if ListProductsUseCase throws', async () => {
+    const { sut, listProductUseCaseStub } = makeSut();
+
+    jest.spyOn(listProductUseCaseStub, 'execute').mockImplementationOnce(() => {
+      throw new Error('any_error');
+    });
+
+    const httpResponse = await sut.handle(makeFakeRequest());
+    expect(httpResponse).toEqual(serverError(new Error('any_error')));
   });
 });
