@@ -15,7 +15,7 @@ const fakeProduct = (): Product => ({
   cost: 5,
   barcode: 'valid_barcode',
   unit: 1,
-  expirationDate: new Date(),
+  expirationDate: new Date(2021, 1, 1, 1, 1, 1, 1),
   providerCode: 1,
   ean: 'valid_ean',
   ncm: 'valid_ncm',
