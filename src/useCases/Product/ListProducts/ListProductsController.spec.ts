@@ -62,8 +62,13 @@ const makeFakeRequest = () => ({
 
 describe('ListProductsController', () => {
   it('should return 200 on success', async () => {
-    const { sut } = makeSut();
+    const { sut, listProductsUseCaseStub } = makeSut();
+
+    jest.spyOn(listProductsUseCaseStub, 'execute')
+      .mockReturnValueOnce(Promise.resolve([fakeProduct()]));
+
     const httpResponse = await sut.handle(makeFakeRequest());
+
     expect(httpResponse.statusCode).toBe(200);
   });
 
@@ -172,13 +177,6 @@ describe('ListProductsController', () => {
     expect(executeSpy).toHaveBeenCalledWith({ currentPage: 1, itemsPerPage: 20 });
   });
 
-  it('Should return 200 if ListProductsUseCase succeeds', async () => {
-    const { sut } = makeSut();
-
-    const httpResponse = await sut.handle(makeFakeRequest());
-    expect(httpResponse.statusCode).toBe(200);
-  });
-
   it('Should return an array of products if ListProductsUseCase succeeds', async () => {
     const { sut, listProductsUseCaseStub } = makeSut();
 
@@ -188,5 +186,16 @@ describe('ListProductsController', () => {
 
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse.body).toEqual([fakeProduct()]);
+  });
+
+  it('Should return 204 if ListProductsUseCase returns an empty array', async () => {
+    const { sut, listProductsUseCaseStub } = makeSut();
+
+    jest.spyOn(listProductsUseCaseStub, 'execute').mockImplementationOnce(() => {
+      return new Promise((resolve) => resolve([]));
+    });
+
+    const httpResponse = await sut.handle(makeFakeRequest());
+    expect(httpResponse.statusCode).toBe(204);
   });
 });
