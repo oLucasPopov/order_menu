@@ -1,9 +1,9 @@
 import { AddProduct, Product } from "../../../../entities/Product";
-import { ICreateProductRepository, IGetProductRepository } from "../../../ProductRepository";
+import { ICreateProductRepository, IGetProductRepository, IListProductsRepository } from "../../../ProductRepository";
 import pghelper from "../helpers/pg_helper";
 
 
-export class ProductPostgresRepository implements ICreateProductRepository, IGetProductRepository {
+export class ProductPostgresRepository implements ICreateProductRepository, IGetProductRepository, IListProductsRepository {
   async create(data: AddProduct): Promise<Product> {
 
     await pghelper.connect();
@@ -79,5 +79,24 @@ export class ProductPostgresRepository implements ICreateProductRepository, IGet
       await pghelper.disconnect();
       return product || null;
     }
+  }
+
+  async list(currentPage: number, itemsPerPage: number): Promise<Product[]> {
+    await pghelper.connect();
+
+    const res = await pghelper.query(
+      `
+      SELECT * FROM PRODUCTS LIMIT $1 OFFSET $2 order by name;
+      `, [itemsPerPage, (currentPage - 1) * itemsPerPage]);
+
+
+    const products = res.rows.map((row) => {
+      const product = new Product();
+      Object.assign(product, row);
+      return product;
+    });
+
+    await pghelper.disconnect();
+    return products;
   }
 }
