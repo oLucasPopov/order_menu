@@ -14,6 +14,11 @@ function makeSut() {
       Object.assign(product, { id: id });
       return product;
     }
+
+    async list(currentPage: number, itemsPerPage: number): Promise<Product[]> {
+      const products = [new Product()];
+      return products;
+    }
   }
 
   const sut = new ProductPostgresRepositoryStub();
@@ -61,5 +66,14 @@ describe('Product Postgres Repository', () => {
     const { sut } = makeSut();
     const product = await sut.get(1);
     expect(product.id).toBe(1);
+  });
+
+  it('should return an array of products', async () => {
+    const { sut } = makeSut();
+
+    jest.spyOn(sut, 'list').mockReturnValueOnce(new Promise((resolve) => resolve([new Product()])));
+
+    const products = await sut.list(1, 1);
+    expect(products).toEqual([new Product()]);
   });
 })
