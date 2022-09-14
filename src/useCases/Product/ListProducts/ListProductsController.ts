@@ -31,7 +31,7 @@ export class ListProductsController implements IController {
 
       return ok(products);
     } catch (error: any) {
-      return serverError(error.message);
+      return serverError(error);
     }
   }
 }
