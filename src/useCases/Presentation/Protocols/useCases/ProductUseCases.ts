@@ -1,4 +1,5 @@
 import { AddProduct, Product } from "../../../../entities/Product";
+import { IPagination } from "../pagination/pagination";
 
 export interface IGetProductUseCase {
   execute(id: number): Promise<Product>
@@ -9,5 +10,5 @@ export interface ICreateProductUseCase {
 }
 
 export interface IListProductsUseCase {
-  execute(): Promise<Product[]>
+  execute(pagination: IPagination): Promise<Product[]>
 }
