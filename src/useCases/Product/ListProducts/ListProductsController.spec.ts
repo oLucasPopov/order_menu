@@ -128,4 +128,13 @@ describe('ListProductsController', () => {
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new Error('any_error')));
   });
+
+  it('Should call ListProductsUseCase with correct values', async () => {
+    const { sut, listProductsUseCaseStub } = makeSut();
+
+    const executeSpy = jest.spyOn(listProductsUseCaseStub, 'execute');
+
+    await sut.handle(makeFakeRequest());
+    expect(executeSpy).toHaveBeenCalledWith({ currentPage: 1, itemsPerPage: 20 });
+  });
 });
