@@ -32,7 +32,7 @@ export class ListProductsController implements IController {
         'x-items-per-page': itemsPerPage
       } = request.headers;
 
-      const products = this.listProductsUseCase.execute({
+      const products = await this.listProductsUseCase.execute({
         currentPage,
         itemsPerPage
       });
