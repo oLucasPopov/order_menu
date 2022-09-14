@@ -97,7 +97,7 @@ describe('ListProductsController', () => {
     expect(httpResponse.body).toEqual(new MissingHeaderError('x-items-per-page'));
   });
 
-  it('Should return 400 if x-current-page is invalid', async () => {
+  it('Should return badRequest if x-current-page is invalid', async () => {
     const { sut } = makeSut();
 
     const httpResponse = await sut.handle({
@@ -107,10 +107,10 @@ describe('ListProductsController', () => {
         "x-items-per-page": 20,
       }
     });
-    expect(httpResponse.statusCode).toBe(400);
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('x-current-page')));
   });
 
-  it('Should return 400 if x-items-per-page is invalid', async () => {
+  it('Should return badRequest if x-items-per-page is invalid', async () => {
     const { sut } = makeSut();
 
     const httpResponse = await sut.handle({
