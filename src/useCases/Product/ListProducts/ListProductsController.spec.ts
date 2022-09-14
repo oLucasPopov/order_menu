@@ -137,4 +137,11 @@ describe('ListProductsController', () => {
     await sut.handle(makeFakeRequest());
     expect(executeSpy).toHaveBeenCalledWith({ currentPage: 1, itemsPerPage: 20 });
   });
+
+  it('Should return 200 if ListProductsUseCase succeeds', async () => {
+    const { sut } = makeSut();
+
+    const httpResponse = await sut.handle(makeFakeRequest());
+    expect(httpResponse.statusCode).toBe(200);
+  });
 });
