@@ -144,4 +144,11 @@ describe('ListProductsController', () => {
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse.statusCode).toBe(200);
   });
+
+  it('Should return an array of products if ListProductsUseCase succeeds', async () => {
+    const { sut } = makeSut();
+
+    const httpResponse = await sut.handle(makeFakeRequest());
+    expect(httpResponse.body).toEqual([]);
+  });
 });
