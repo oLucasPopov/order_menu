@@ -19,6 +19,12 @@ function makeSut() {
       const products = [new Product()];
       return products;
     }
+
+    async update(id: number, data: any): Promise<Product> {
+      const product = new Product();
+      Object.assign(product, { id: id }, data);
+      return product;
+    }
   }
 
   const sut = new ProductPostgresRepositoryStub();
@@ -72,4 +78,45 @@ describe('Product Postgres Repository', () => {
     const products = await sut.list(1, 1);
     expect(products).toEqual([new Product()]);
   });
+
+  it('Should return a product on update success', async () => {
+    const { sut } = makeSut();
+    const product = await sut.update(1, fakeProduct());
+    expect(product).toEqual({ id: 1, ...fakeProduct() });
+  });
+
+  it('should be able to update a product', async () => {
+    const { sut } = makeSut();
+    const product = await sut.update(1, fakeProduct());
+    expect(product).toHaveProperty('id');
+  });
+
+  it('should call list with correct values', async () => {
+    const { sut } = makeSut();
+    const listSpy = jest.spyOn(sut, 'list');
+    await sut.list(1, 1);
+    expect(listSpy).toHaveBeenCalledWith(1, 1);
+  });
+
+  it('should call get with correct values', async () => {
+    const { sut } = makeSut();
+    const getSpy = jest.spyOn(sut, 'get');
+    await sut.get(1);
+    expect(getSpy).toHaveBeenCalledWith(1);
+  });
+
+  it('should call create with correct values', async () => {
+    const { sut } = makeSut();
+    const createSpy = jest.spyOn(sut, 'create');
+    await sut.create(fakeProduct());
+    expect(createSpy).toHaveBeenCalledWith(fakeProduct());
+  });
+
+  it('should call update with correct values', async () => {
+    const { sut } = makeSut();
+    const updateSpy = jest.spyOn(sut, 'update');
+    await sut.update(1, fakeProduct());
+    expect(updateSpy).toHaveBeenCalledWith(1, fakeProduct());
+  });
+
 })
