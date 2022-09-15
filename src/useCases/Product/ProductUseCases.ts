@@ -1,4 +1,4 @@
-import { AddProduct, Product } from "../../entities/Product";
+import { AddProduct, Product, UpdateProduct } from "../../entities/Product";
 import { IPagination } from "../utils/protocols/pagination/pagination";
 
 export interface IGetProductUseCase {
@@ -11,4 +11,8 @@ export interface ICreateProductUseCase {
 
 export interface IListProductsUseCase {
   execute(pagination: IPagination): Promise<Product[]>
+}
+
+export interface IUpdateProductUseCase {
+  execute(product: UpdateProduct, productId: number): Promise<Product>
 }
