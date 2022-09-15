@@ -8,9 +8,7 @@ export class CreateProductUseCase implements ICreateProductUseCase {
   ) { }
 
   async execute(data: AddProduct): Promise<Product> {
-    const product = new Product();
-    Object.assign(product, data);
-    const newProduct = await this.productRepository.create(product);
+    const newProduct = await this.productRepository.create(data);
     return Promise.resolve(newProduct);
   }
 }
