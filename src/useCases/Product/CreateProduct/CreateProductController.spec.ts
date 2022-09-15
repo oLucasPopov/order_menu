@@ -5,21 +5,21 @@ import { IHttpRequest } from "../../utils/protocols";
 import { CreateProductController } from "./CreateProductController";
 import { CreateProductUseCase } from "./CreateProductUseCase";
 
-const fakeProductData = () => ({
+const fakeProductData = (): Product => ({
+  id: 1,
   name: 'any_name',
   cost: 10,
   price: 20,
   quantity: 30,
   barcode: 'any_barcode',
   description: 'any_description',
-  category: 1,
-  unit: 1,
+  id_category: 1,
+  category: 'any_category',
+  id_unit: 1,
+  unit: 'any_unit',
   expirationDate: new Date(2023, 1, 1, 1, 1, 1, 1),
-  providerCode: 1,
-  ean: 'any_ean',
-  ncm: 'any_ncm',
-  cest: 'any_cest',
-  origin: 'any_origin',
+  id_supplier: 1,
+  supplier: 'any_supplier',
   liquidWeight: 40,
   bruteWeight: 50,
   width: 50,
@@ -27,9 +27,28 @@ const fakeProductData = () => ({
   length: 70,
 })
 
+const fakeAddProductData = (): AddProduct => ({
+  name: 'any_name',
+  cost: 10,
+  price: 20,
+  quantity: 30,
+  barcode: 'any_barcode',
+  description: 'any_description',
+  id_category: 1,
+  id_unit: 1,
+  expirationDate: new Date(2023, 1, 1, 1, 1, 1, 1),
+  id_supplier: 1,
+  liquidWeight: 40,
+  bruteWeight: 50,
+  width: 50,
+  height: 60,
+  length: 70,
+});
+
+
 const makeFakeRequest = (omit: string): IHttpRequest => {
 
-  const body = fakeProductData()
+  const body = fakeAddProductData()
 
   if (omit) {
     delete body[omit as keyof typeof body];
@@ -37,11 +56,6 @@ const makeFakeRequest = (omit: string): IHttpRequest => {
 
   return { body }
 };
-
-const makeFakeProduct = () => ({
-  id: 1,
-  ...fakeProductData()
-});
 
 const makeSut = () => {
   class CreateProductRepositoryStub implements ICreateProductRepository {
@@ -58,7 +72,12 @@ const makeSut = () => {
 
 class CreateProductRepositoryStub implements ICreateProductRepository {
   async create(product: AddProduct): Promise<Product> {
-    return Promise.resolve(Object.assign({}, product, { id: 1 }));
+    return Promise.resolve(Object.assign({}, product, {
+      id: 1,
+      category: 'any_category',
+      unit: 'any_unit',
+      supplier: 'any_supplier'
+    }));
   }
 }
 
@@ -89,13 +108,13 @@ describe('Create Product Controller', () => {
 
   it('should return 400 if no category is provided', async () => {
     const { sut } = makeSut();
-    const httpResponse = await sut.handle(makeFakeRequest('category'));
+    const httpResponse = await sut.handle(makeFakeRequest('id_category'));
     expect(httpResponse.statusCode).toBe(400);
   })
 
   it('should return 400 if no unit is provided', async () => {
     const { sut } = makeSut();
-    const httpResponse = await sut.handle(makeFakeRequest('unit'));
+    const httpResponse = await sut.handle(makeFakeRequest('id_unit'));
     expect(httpResponse.statusCode).toBe(400);
   })
 
@@ -108,8 +127,14 @@ describe('Create Product Controller', () => {
   it('should call CreateProductUseCase with correct values', async () => {
     const { sut, createProductUseCaseStub } = makeSut();
     const createSpy = jest.spyOn(createProductUseCaseStub, 'execute');
-    await sut.handle(makeFakeRequest(''));
-    expect(createSpy).toHaveBeenCalledWith(fakeProductData());
+
+    const httpRequest = {
+      body: fakeAddProductData()
+    }
+
+
+    await sut.handle(httpRequest);
+    expect(createSpy).toHaveBeenCalledWith(fakeAddProductData());
   })
 
   it('should return 500 if CreateProductUseCase throws', async () => {
@@ -123,9 +148,9 @@ describe('Create Product Controller', () => {
 
   it('should return product if valid data is provided', async () => {
     const { sut, createProductUseCaseStub } = makeSut();
-    jest.spyOn(createProductUseCaseStub, 'execute').mockReturnValueOnce(Promise.resolve(makeFakeProduct()));
+    jest.spyOn(createProductUseCaseStub, 'execute').mockReturnValueOnce(Promise.resolve(fakeProductData()));
     const httpResponse = await sut.handle(makeFakeRequest(''));
-    expect(httpResponse).toEqual(ok(makeFakeProduct()));
+    expect(httpResponse).toEqual(ok(fakeProductData()));
   })
 })
 

@@ -8,51 +8,42 @@ export class ProductPostgresRepository implements ICreateProductRepository, IGet
 
     await pghelper.connect();
 
-    const res = await pghelper.query(
-      `
-      INSERT INTO PRODUCTS(
-        NAME
-       ,COST
-       ,PRICE
-       ,QUANTITY
-       ,BARCODE
-       ,DESCRIPTION
-       ,CATEGORY
-       ,UNIT
-       ,EXPIRATIONDATE
-       ,PROVIDERCODE
-       ,EAN
-       ,NCM
-       ,CEST
-       ,ORIGIN
-       ,LIQUIDWEIGHT
-       ,BRUTEWEIGHT
-       ,WIDTH
-       ,HEIGHT
-       ,LENGTH
-       ) VALUES(
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19
-       ) RETURNING *;
-      `, [data.name
-      , data.cost
-      , data.price
-      , data.quantity
-      , data.barcode
-      , data.description
-      , data.category
-      , data.unit
-      , data.expirationDate
-      , data.providerCode
-      , data.ean
-      , data.ncm
-      , data.cest
-      , data.origin
-      , data.liquidWeight
-      , data.bruteWeight
-      , data.width
-      , data.height
-      , data.length
-    ]);
+    const sql = ` INSERT INTO PRODUCTS(
+      NAME          
+      ,COST          
+      ,PRICE         
+      ,QUANTITY      
+      ,BARCODE       
+      ,DESCRIPTION   
+      ,ID_CATEGORY   
+      ,ID_UNIT       
+      ,EXPIRATIONDATE
+      ,ID_SUPPLIER   
+      ,LIQUIDWEIGHT  
+      ,BRUTEWEIGHT   
+      ,WIDTH         
+      ,HEIGHT        
+      ,LENGTH   
+    ) VALUES(
+      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
+    ) RETURNING *;`
+
+    const res = await pghelper.query(sql, [
+      data.name,
+      data.cost,
+      data.price,
+      data.quantity,
+      data.barcode,
+      data.description,
+      data.id_category,
+      data.id_unit,
+      data.expirationDate,
+      data.id_supplier,
+      data.liquidWeight,
+      data.bruteWeight,
+      data.width,
+      data.height,
+      data.length]);
 
     const newProduct = new Product();
     Object.assign(newProduct, res.rows[0]);
@@ -64,11 +55,7 @@ export class ProductPostgresRepository implements ICreateProductRepository, IGet
   async get(id: number): Promise<Product> {
     await pghelper.connect();
 
-    const res = await pghelper.query(
-      `
-      SELECT * FROM PRODUCTS WHERE ID = $1;
-      `, [id]);
-
+    const res = await pghelper.query('SELECT * FROM PRODUCTS WHERE ID = $1', [id]);
 
     if (res.rowCount === 0) {
       return null as unknown as Product;
