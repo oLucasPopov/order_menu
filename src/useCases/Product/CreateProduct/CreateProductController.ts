@@ -1,6 +1,6 @@
-import { MissingParamError } from "../../Presentation/errors/MissingParamError";
-import { badRequest, ok, serverError } from "../../Presentation/helpers/http/httpHelper";
-import { IController, IHttpRequest, IHttpResponse } from "../../Presentation/Protocols";
+import { MissingParamError } from "../../utils/errors/MissingParamError";
+import { badRequest, ok, serverError } from "../../utils/helpers/httpHelper";
+import { IController, IHttpRequest, IHttpResponse } from "../../utils/protocols";
 import { CreateProductUseCase } from "./CreateProductUseCase";
 
 export class CreateProductController implements IController {

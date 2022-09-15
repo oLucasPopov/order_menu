@@ -1,5 +1,5 @@
-import { AddProduct, Product } from "../../../../entities/Product";
-import { IPagination } from "../pagination/pagination";
+import { AddProduct, Product } from "../../entities/Product";
+import { IPagination } from "../utils/protocols/pagination/pagination";
 
 export interface IGetProductUseCase {
   execute(id: number): Promise<Product>

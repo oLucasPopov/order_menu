@@ -1,4 +1,4 @@
-import { ProductPostgresRepository } from "../Repositories/ProductPostgresRepository";
+import { ProductPostgresRepository } from "../Product/ProductPostgresRepository";
 import { AddProduct, Product } from "../../../../entities/Product";
 
 function makeSut() {

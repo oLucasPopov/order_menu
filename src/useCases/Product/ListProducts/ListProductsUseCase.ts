@@ -1,7 +1,7 @@
 import { Product } from "../../../entities/Product";
 import { IListProductsRepository } from "../../../repositories/ProductRepository";
-import { IPagination } from "../../Presentation/Protocols";
-import { IListProductsUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
+import { IPagination } from "../../utils/protocols";
+import { IListProductsUseCase } from "../ProductUseCases";
 
 
 export class ListProductsUseCase implements IListProductsUseCase {

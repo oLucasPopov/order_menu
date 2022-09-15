@@ -1,6 +1,6 @@
 import { Product } from "../../../entities/Product";
 import { IGetProductRepository } from "../../../repositories/ProductRepository";
-import { IGetProductUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
+import { IGetProductUseCase } from "../ProductUseCases";
 
 
 export class GetProductUseCase implements IGetProductUseCase {

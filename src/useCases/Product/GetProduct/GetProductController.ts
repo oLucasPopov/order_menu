@@ -1,7 +1,7 @@
-import { MissingParamError, NotFoundError} from "../../Presentation/errors";
-import { badRequest, notFound, ok, serverError } from "../../Presentation/helpers/http/httpHelper";
-import { IController, IHttpRequest, IHttpResponse } from "../../Presentation/Protocols";
-import { IGetProductUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
+import { MissingParamError, NotFoundError} from "../../utils/errors";
+import { badRequest, notFound, ok, serverError } from "../../utils/helpers/httpHelper";
+import { IController, IHttpRequest, IHttpResponse } from "../../utils/protocols";
+import { IGetProductUseCase } from "../ProductUseCases";
 
 
 export class GetProductController implements IController {

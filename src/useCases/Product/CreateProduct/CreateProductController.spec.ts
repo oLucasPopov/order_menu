@@ -1,7 +1,7 @@
 import { AddProduct, Product } from "../../../entities/Product";
 import { ICreateProductRepository } from "../../../repositories/ProductRepository";
-import { ok } from "../../Presentation/helpers/http/httpHelper";
-import { IHttpRequest } from "../../Presentation/Protocols";
+import { ok } from "../../utils/helpers/httpHelper";
+import { IHttpRequest } from "../../utils/protocols";
 import { CreateProductController } from "./CreateProductController";
 import { CreateProductUseCase } from "./CreateProductUseCase";
 

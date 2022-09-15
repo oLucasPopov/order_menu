@@ -1,6 +1,6 @@
 import { ListProductsUseCase } from "./ListProductsUseCase";
 import { ListProductsController } from "./ListProductsController";
-import { ProductPostgresRepository } from "../../../repositories/implementations/PG/Repositories/ProductPostgresRepository";
+import { ProductPostgresRepository } from "../../../repositories/implementations/PG/Product/ProductPostgresRepository";
 
 
 const productRepository = new ProductPostgresRepository();

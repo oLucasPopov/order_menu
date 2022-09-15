@@ -1,7 +1,7 @@
 import { Product } from "../../../entities/Product";
 import { IGetProductRepository } from "../../../repositories/ProductRepository";
-import { NotFoundError } from "../../Presentation/errors/NotFoundError";
-import { IGetProductUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
+import { NotFoundError } from "../../utils/errors/NotFoundError";
+import { IGetProductUseCase } from "../ProductUseCases";
 import { GetProductController } from "./GetProductController";
 
 const fakeRequest = () => ({

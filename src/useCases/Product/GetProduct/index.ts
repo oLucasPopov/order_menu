@@ -1,4 +1,4 @@
-import { ProductPostgresRepository } from "../../../repositories/implementations/PG/Repositories/ProductPostgresRepository";
+import { ProductPostgresRepository } from "../../../repositories/implementations/PG/Product/ProductPostgresRepository";
 import { GetProductController } from "./GetProductController";
 import { GetProductUseCase } from "./GetProductUseCase";
 

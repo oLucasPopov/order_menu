@@ -1,6 +1,6 @@
 import { AddProduct, Product } from "../../../entities/Product";
 import { ICreateProductRepository } from "../../../repositories/ProductRepository";
-import { ICreateProductUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
+import { ICreateProductUseCase } from "../ProductUseCases";
 import { ICreateProductDTO } from "./CreateProductDTO";
 
 export class CreateProductUseCase implements ICreateProductUseCase {

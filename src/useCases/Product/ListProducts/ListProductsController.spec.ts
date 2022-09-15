@@ -1,9 +1,9 @@
 import { Product } from "../../../entities/Product";
 import { IListProductsRepository } from "../../../repositories/ProductRepository";
-import { InvalidParamError } from "../../Presentation/errors";
-import { MissingHeaderError } from "../../Presentation/errors/MissingHeaderError";
-import { badRequest, noContent, ok, serverError } from "../../Presentation/helpers/http/httpHelper";
-import { IListProductsUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
+import { InvalidParamError } from "../../utils/errors";
+import { MissingHeaderError } from "../../utils/errors/MissingHeaderError";
+import { badRequest, noContent, ok, serverError } from "../../utils/helpers/httpHelper";
+import { IListProductsUseCase } from "../ProductUseCases";
 import { ListProductsController } from "./ListProductsController";
 
 const fakeProduct = (): Product => ({

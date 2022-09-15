@@ -1,8 +1,8 @@
-import { InvalidParamError, MissingHeaderError } from "../../Presentation/errors";
-import { badRequest, noContent, ok } from "../../Presentation/helpers/http/httpHelper";
-import { IController, IHttpRequest, IHttpResponse } from "../../Presentation/Protocols";
-import { IListProductsUseCase } from "../../Presentation/Protocols/useCases/ProductUseCases";
-import { serverError } from "../../Presentation/helpers/http/httpHelper";
+import { InvalidParamError, MissingHeaderError } from "../../utils/errors";
+import { badRequest, noContent, ok } from "../../utils/helpers/httpHelper";
+import { IController, IHttpRequest, IHttpResponse } from "../../utils/protocols";
+import { IListProductsUseCase } from "../ProductUseCases";
+import { serverError } from "../../utils/helpers/httpHelper";
 
 
 export class ListProductsController implements IController {
