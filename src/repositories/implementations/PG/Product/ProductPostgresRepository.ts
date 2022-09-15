@@ -8,25 +8,32 @@ export class ProductPostgresRepository implements ICreateProductRepository, IGet
 
     await pghelper.connect();
 
-    const sql = ` INSERT INTO PRODUCTS(
-      NAME          
-      ,COST          
-      ,PRICE         
-      ,QUANTITY      
-      ,BARCODE       
-      ,DESCRIPTION   
-      ,ID_CATEGORY   
-      ,ID_UNIT       
-      ,EXPIRATIONDATE
-      ,ID_SUPPLIER   
-      ,LIQUIDWEIGHT  
-      ,BRUTEWEIGHT   
-      ,WIDTH         
-      ,HEIGHT        
-      ,LENGTH   
-    ) VALUES(
-      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
-    ) RETURNING *;`
+    const sql = `
+    WITH PRODUTOS AS (
+      INSERT INTO PRODUCTS(
+        NAME          
+       ,COST          
+       ,PRICE         
+       ,QUANTITY      
+       ,BARCODE       
+       ,DESCRIPTION   
+       ,ID_CATEGORY   
+       ,ID_UNIT       
+       ,EXPIRATIONDATE
+       ,ID_SUPPLIER   
+       ,LIQUIDWEIGHT  
+       ,BRUTEWEIGHT   
+       ,WIDTH         
+       ,HEIGHT        
+       ,LENGTH) 
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) 
+    RETURNING *) 
+    SELECT P.*           
+          ,C.DESCRIPTION AS CATEGORY
+          ,U.DESCRIPTION AS UNIT
+      FROM PRODUTOS P
+     INNER JOIN CATEGORIES C ON C.ID = P.ID_CATEGORY
+     INNER JOIN UNITS      U ON U.ID = P.ID_UNIT`
 
     const res = await pghelper.query(sql, [
       data.name,
@@ -55,7 +62,30 @@ export class ProductPostgresRepository implements ICreateProductRepository, IGet
   async get(id: number): Promise<Product> {
     await pghelper.connect();
 
-    const res = await pghelper.query('SELECT * FROM PRODUCTS WHERE ID = $1', [id]);
+    const res = await pghelper.query(`
+    SELECT P.ID 
+          ,P.NAME          
+          ,P.COST          
+          ,P.PRICE         
+          ,P.QUANTITY      
+          ,P.BARCODE       
+          ,P.DESCRIPTION   
+          ,P.ID_CATEGORY   
+          ,C.DESCRIPTION AS CATEGORY
+          ,P.ID_UNIT      
+          ,U.DESCRIPTION AS UNIT
+          ,P.EXPIRATIONDATE
+          ,P.ID_SUPPLIER   
+          ,P.LIQUIDWEIGHT  
+          ,P.BRUTEWEIGHT   
+          ,P.WIDTH                 
+          ,P.HEIGHT        
+          ,P.LENGTH        
+      FROM PRODUCTS P
+     INNER JOIN CATEGORIES C ON C.ID = P.ID_CATEGORY
+     INNER JOIN UNITS      U ON U.ID = P.ID_UNIT
+     WHERE P.ID = $1;
+    `, [id]);
 
     if (res.rowCount === 0) {
       return null as unknown as Product;
@@ -73,7 +103,28 @@ export class ProductPostgresRepository implements ICreateProductRepository, IGet
 
     const res = await pghelper.query(
       `
-      SELECT * FROM PRODUCTS LIMIT $1 OFFSET $2 ;
+      SELECT P.ID 
+      ,P.NAME          
+      ,P.COST          
+      ,P.PRICE         
+      ,P.QUANTITY      
+      ,P.BARCODE       
+      ,P.DESCRIPTION   
+      ,P.ID_CATEGORY   
+      ,C.DESCRIPTION AS CATEGORY
+      ,P.ID_UNIT      
+      ,U.DESCRIPTION AS UNIT
+      ,P.EXPIRATIONDATE
+      ,P.ID_SUPPLIER   
+      ,P.LIQUIDWEIGHT  
+      ,P.BRUTEWEIGHT   
+      ,P.WIDTH                 
+      ,P.HEIGHT        
+      ,P.LENGTH        
+  FROM PRODUCTS P
+ INNER JOIN CATEGORIES C ON C.ID = P.ID_CATEGORY
+ INNER JOIN UNITS      U ON U.ID = P.ID_UNIT
+ LIMIT $1 OFFSET $2 ;
       `, [itemsPerPage, (currentPage - 1) * itemsPerPage]);
 
 
