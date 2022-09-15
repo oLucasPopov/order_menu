@@ -1,5 +1,11 @@
-import { Client, QueryResult } from "pg";
+import { Client, types } from "pg";
 import config from "../../../../config/env"
+
+const TYPE_NUMERIC_CODE = 1700;
+
+types.setTypeParser(TYPE_NUMERIC_CODE, function(val) {
+  return parseFloat(val);
+});
 
 const pghelper = {
   pgClient: undefined as Client | undefined,
