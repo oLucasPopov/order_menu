@@ -22,7 +22,7 @@ export class ListProductsController implements IController {
       }
 
       for (let header of requiredHeaders) {
-        if (typeof request.headers[header] !== 'number') {
+        if (isNaN(Number(request.headers[header]))) {
           return badRequest(new InvalidParamError(`${header} must be a number`));
         }
       }
