@@ -1,4 +1,5 @@
 import { AddProduct, Product, UpdateProduct } from "../../../entities/Product";
+import { IUpdateProductRepository } from "../../../repositories/ProductRepository";
 import { MissingParamError } from "../../utils/errors";
 import { badRequest, ok } from "../../utils/helpers/httpHelper";
 import { UpdateProductController } from "./UpdateProductController";
@@ -22,17 +23,28 @@ const fakeAddProductData = (): AddProduct => ({
 });
 
 const makeSut = () => {
-  class UpdateProductUseCaseStub {
-    async execute(product: UpdateProduct): Promise<Product> {
-      return Promise.resolve(Object.assign(new Product(), product, { id: 1 }));
+  class UpdateProductRepositoryStub implements IUpdateProductRepository {
+    async update(productId: number, product: UpdateProduct): Promise<Product> {
+      const fakeProduct = new Product();
+      Object.assign(fakeProduct, { id: productId }, product);
+      return fakeProduct;
     }
   }
 
-  const updateProductUseCaseStub = new UpdateProductUseCaseStub();
+  class UpdateProductUseCaseStub {
+    constructor(private readonly updateProductRepository: IUpdateProductRepository) {}
+    async execute(product: UpdateProduct): Promise<Product> {
+      return this.updateProductRepository.update(1, product);
+    }
+  }
+
+  const updateProductRepositoryStub = new UpdateProductRepositoryStub();
+  const updateProductUseCaseStub = new UpdateProductUseCaseStub(updateProductRepositoryStub);
   const sut = new UpdateProductController(updateProductUseCaseStub);
   return {
     sut,
-    updateProductUseCaseStub
+    updateProductUseCaseStub,
+    updateProductRepositoryStub
   };
 }
 
@@ -89,5 +101,21 @@ describe('UpdateProductController', () => {
     await sut.handle(httpRequest)
     expect(executeSpy).toHaveBeenCalledWith(fakeAddProductData(), 1);
   })
+
+  it('Should call UpdateProductRepository with correct values', async () => {
+    const { sut, updateProductRepositoryStub } = makeSut()
+    const httpRequest = {
+      params: {
+        id: 1
+      },
+      body: fakeAddProductData()
+    }
+
+    const executeSpy = jest.spyOn(updateProductRepositoryStub, 'update');
+
+    await sut.handle(httpRequest)
+    expect(executeSpy).toHaveBeenCalledWith(1, fakeAddProductData());
+  })
+
 
 });
