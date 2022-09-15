@@ -1,9 +1,14 @@
-import { AddProduct, Product } from "../../../../entities/Product";
-import { ICreateProductRepository, IGetProductRepository, IListProductsRepository } from "../../../ProductRepository";
+import { AddProduct, Product, UpdateProduct } from "../../../../entities/Product";
+import { ICreateProductRepository, IGetProductRepository, IListProductsRepository, IUpdateProductRepository } from "../../../ProductRepository";
 import pghelper from "../helpers/pg_helper";
 
 
-export class ProductPostgresRepository implements ICreateProductRepository, IGetProductRepository, IListProductsRepository {
+export class ProductPostgresRepository
+  implements
+  ICreateProductRepository,
+  IGetProductRepository,
+  IListProductsRepository,
+  IUpdateProductRepository {
   async create(data: AddProduct): Promise<Product> {
 
     await pghelper.connect();
@@ -136,5 +141,60 @@ export class ProductPostgresRepository implements ICreateProductRepository, IGet
 
     await pghelper.disconnect();
     return products;
+  }
+
+  async update(id: number, data: UpdateProduct): Promise<Product> {
+    await pghelper.connect();
+
+    const sql = `
+    WITH PRODUTOS AS (
+      UPDATE PRODUCTS SET
+        NAME          = COALESCE($1, NAME)
+       ,COST          = COALESCE($2, COST)
+       ,PRICE         = COALESCE($3, PRICE)
+       ,QUANTITY      = COALESCE($4, QUANTITY)
+       ,BARCODE       = COALESCE($5, BARCODE)
+       ,DESCRIPTION   = COALESCE($6, DESCRIPTION)
+       ,ID_CATEGORY   = COALESCE($7, ID_CATEGORY)
+       ,ID_UNIT       = COALESCE($8, ID_UNIT)
+       ,EXPIRATIONDATE= COALESCE($9, EXPIRATIONDATE)
+       ,ID_SUPPLIER   = COALESCE($10, ID_SUPPLIER)
+       ,LIQUIDWEIGHT  = COALESCE($11, LIQUIDWEIGHT)
+       ,BRUTEWEIGHT   = COALESCE($12, BRUTEWEIGHT)
+       ,WIDTH         = COALESCE($13, WIDTH)
+       ,HEIGHT        = COALESCE($14, HEIGHT)
+       ,LENGTH        = COALESCE($15, LENGTH)
+      WHERE ID = $16
+    RETURNING *) 
+    SELECT P.*           
+          ,C.DESCRIPTION AS CATEGORY
+          ,U.DESCRIPTION AS UNIT
+      FROM PRODUTOS P
+     INNER JOIN CATEGORIES C ON C.ID = P.ID_CATEGORY
+     INNER JOIN UNITS      U ON U.ID = P.ID_UNIT`
+
+    const res = await pghelper.query(sql, [
+      data.name || null,
+      data.cost || null,
+      data.price || null,
+      data.quantity || null,
+      data.barcode || null,
+      data.description || null,
+      data.id_category || null,
+      data.id_unit || null,
+      data.expirationDate || null,
+      data.id_supplier || null,
+      data.liquidWeight || null,
+      data.bruteWeight || null,
+      data.width || null,
+      data.height || null,
+      data.length || null,
+      id]);
+
+    const product = new Product();
+    Object.assign(product, res.rows[0]);
+
+    await pghelper.disconnect();
+    return product;
   }
 }
