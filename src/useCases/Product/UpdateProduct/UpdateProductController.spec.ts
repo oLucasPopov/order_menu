@@ -75,4 +75,19 @@ describe('UpdateProductController', () => {
     expect(httpResponse.body.id).toBe(1);
   })
 
+  it('Should call UpdateProductUseCase with correct values', async () => {
+    const { sut, updateProductUseCaseStub } = makeSut()
+    const httpRequest = {
+      params: {
+        id: 1
+      },
+      body: fakeAddProductData()
+    }
+
+    const executeSpy = jest.spyOn(updateProductUseCaseStub, 'execute');
+
+    await sut.handle(httpRequest)
+    expect(executeSpy).toHaveBeenCalledWith(fakeAddProductData(), 1);
+  })
+
 });
