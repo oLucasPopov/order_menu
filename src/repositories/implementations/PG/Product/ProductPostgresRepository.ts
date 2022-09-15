@@ -86,7 +86,7 @@ export class ProductPostgresRepository implements ICreateProductRepository, IGet
 
     const res = await pghelper.query(
       `
-      SELECT * FROM PRODUCTS LIMIT $1 OFFSET $2 order by name;
+      SELECT * FROM PRODUCTS LIMIT $1 OFFSET $2 ;
       `, [itemsPerPage, (currentPage - 1) * itemsPerPage]);
 
 
