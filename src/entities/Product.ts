@@ -37,3 +37,21 @@ export class AddProduct {
   height: number;
   length: number;
 }
+
+export class UpdateProduct {
+  name?: string;
+  cost?: number;
+  price?: number;
+  quantity?: number;
+  barcode?: string;
+  description?: string;
+  id_category?: number;
+  id_unit?: number;
+  expirationDate?: Date;
+  id_supplier?: number;
+  liquidWeight?: number;
+  bruteWeight?: number;
+  width?: number;
+  height?: number;
+  length?: number; 
+}
